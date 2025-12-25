@@ -50,7 +50,21 @@ const samples = [
   { title: 'Royal Enfield Meteor 350', brand: 'Royal Enfield', model: 'Meteor 350', category: 'bike', year: 2021, price: 210000, fuel_type: 'Petrol', description: 'Comfort cruiser.' },
   { title: 'Yamaha RayZR', brand: 'Yamaha', model: 'RayZR', category: 'scooter', year: 2023, price: 78000, fuel_type: 'Petrol', description: 'Peppy city scooter.' },
   { title: 'Hero Xtreme 160R', brand: 'Hero', model: 'Xtreme 160R', category: 'bike', year: 2024, price: 125000, fuel_type: 'Petrol', description: 'Performance commuter.' },
-  { title: 'Okinawa PraisePro', brand: 'Okinawa', model: 'PraisePro', category: 'ev', year: 2023, price: 98000, battery_range: 90, fuel_type: 'Electric', description: 'Value EV scooter.' }
+  { title: 'Okinawa PraisePro', brand: 'Okinawa', model: 'PraisePro', category: 'ev', year: 2023, price: 98000, battery_range: 90, fuel_type: 'Electric', description: 'Value EV scooter.' },
+  { title: 'Kawasaki Ninja 300', brand: 'Kawasaki', model: 'Ninja 300', category: 'bike', year: 2023, price: 340000, fuel_type: 'Petrol', description: 'Entry level sportbike.' },
+  { title: 'Ducati Scrambler Icon', brand: 'Ducati', model: 'Scrambler Icon', category: 'bike', year: 2022, price: 950000, fuel_type: 'Petrol', description: 'Iconic style and fun.' },
+  { title: 'Triumph Speed 400', brand: 'Triumph', model: 'Speed 400', category: 'bike', year: 2024, price: 233000, fuel_type: 'Petrol', description: 'Modern classic roadster.' },
+  { title: 'Harley-Davidson X440', brand: 'Harley-Davidson', model: 'X440', category: 'bike', year: 2024, price: 240000, fuel_type: 'Petrol', description: 'American roadster.' },
+  { title: 'BMW G 310 R', brand: 'BMW', model: 'G 310 R', category: 'bike', year: 2023, price: 290000, fuel_type: 'Petrol', description: 'Premium agile roadster.' },
+  { title: 'Jawa 42 Bobber', brand: 'Jawa', model: '42 Bobber', category: 'bike', year: 2023, price: 225000, fuel_type: 'Petrol', description: 'Factory custom bobber.' },
+  { title: 'Ultraviolette F77', brand: 'Ultraviolette', model: 'F77', category: 'ev', year: 2024, price: 380000, battery_range: 307, fuel_type: 'Electric', description: 'High performance electric motorcycle.' },
+  { title: 'Revolt RV400', brand: 'Revolt', model: 'RV400', category: 'ev', year: 2023, price: 135000, battery_range: 150, fuel_type: 'Electric', description: 'AI enabled electric bike.' },
+  { title: 'KTM RC 390', brand: 'KTM', model: 'RC 390', category: 'bike', year: 2023, price: 318000, fuel_type: 'Petrol', description: 'Track ready supersport.' },
+  { title: 'Suzuki Hayabusa', brand: 'Suzuki', model: 'Hayabusa', category: 'bike', year: 2021, price: 1600000, fuel_type: 'Petrol', description: 'The legendary falcon.' },
+  { title: 'Yamaha R15 V4', brand: 'Yamaha', model: 'R15 V4', category: 'bike', year: 2024, price: 182000, fuel_type: 'Petrol', description: 'Racing DNA for the streets.' },
+  { title: 'Honda CB350RS', brand: 'Honda', model: 'CB350RS', category: 'bike', year: 2023, price: 215000, fuel_type: 'Petrol', description: 'Scrambler style modern classic.' },
+  { title: 'Hero XPulse 200 4V', brand: 'Hero', model: 'XPulse 200 4V', category: 'bike', year: 2024, price: 145000, fuel_type: 'Petrol', description: 'Adventure ready off-roader.' },
+  { title: 'TVS Ronin', brand: 'TVS', model: 'Ronin', category: 'bike', year: 2023, price: 160000, fuel_type: 'Petrol', description: 'Modern retro scrambler.' }
 ];
 
 (async () => {
@@ -58,7 +72,7 @@ const samples = [
   console.log('Using MONGO_URI =', mongoUri);
 
   // Path to the uploaded file you provided in this session:
-  const uploadedPath = '/mnt/data/833ac447-1bd5-4653-85d8-18d4e6a105a0.png';
+  const uploadedPath = path.join(__dirname, '..', 'uploads', '1764670692979-718709134-hf-deluxe.png');
 
   try {
     await mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 5000 });

@@ -18,27 +18,6 @@ if (!fs.existsSync(uploadsDir)) {
   console.log("📁 uploads folder created at", uploadsDir);
 }
 
-// OPTIONAL: copy a sample file from container (/mnt/data/...) into uploads for quick testing
-// Replace this path with another file if you prefer. The path below comes from your workspace.
-const sampleLocalPath = "/mnt/data/d66be1d0-5af9-41d4-84e9-41d7614d2209.png";
-try {
-  if (fs.existsSync(sampleLocalPath)) {
-    const filename = path.basename(sampleLocalPath);
-    const dest = path.join(uploadsDir, filename);
-    // only copy if not already present
-    if (!fs.existsSync(dest)) {
-      fs.copyFileSync(sampleLocalPath, dest);
-      console.log(`Copied sample file into uploads: /uploads/${filename}`);
-    } else {
-      console.log(`Sample file already present in uploads: /uploads/${filename}`);
-    }
-  } else {
-    console.log("Sample file not found at", sampleLocalPath);
-  }
-} catch (err) {
-  console.warn("Could not copy sample file:", err.message);
-}
-
 // Route modules (keep just one vehicles router)
 const authRoutes = fs.existsSync(path.join(__dirname, "routes", "auth.js")) ? require("./routes/auth") : null;
 

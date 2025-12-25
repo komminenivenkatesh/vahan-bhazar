@@ -1,111 +1,281 @@
-import React from "react";
-import "../App.css";
+import React, { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import Navbar from "../components/Navbar";
 
+const workflowSteps = [
+  { title: "Browse", text: "Explore curated listings with live filters." },
+  { title: "Select", text: "Open a bike card to view specs, images, and price." },
+  { title: "Secure", text: "Login or sign up to reserve or message sellers." },
+  { title: "Payment", text: "Head to payment to confirm your booking." },
+];
 
 const About: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"]
+  });
+
+  const y1 = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const y2 = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+
   return (
     <>
       <Navbar />
 
-      <section className="about-section">
-        <h2>About BikeZone</h2>
-        <p className="about-intro">
-          BikeZone is an online marketplace for buying and selling used
-          motorcycles and scooters. It connects individual sellers with
-          interested buyers through an easy-to-use web interface, powerful
-          filters, and rich vehicle details.
-        </p>
+      <div ref={containerRef} style={{ position: 'relative', minHeight: '100vh', overflow: 'hidden', background: '#000000' }}>
+        {/* Animated Background Orbs */}
+        <motion.div
+          style={{
+            position: 'absolute',
+            top: '15%',
+            left: '8%',
+            width: '450px',
+            height: '450px',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(212,175,55,0.15) 0%, rgba(212,175,55,0) 70%)',
+            filter: 'blur(70px)',
+            y: y1,
+          }}
+        />
+        <motion.div
+          style={{
+            position: 'absolute',
+            top: '35%',
+            right: '5%',
+            width: '550px',
+            height: '550px',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(192,192,192,0.12) 0%, rgba(192,192,192,0) 70%)',
+            filter: 'blur(90px)',
+            y: y2,
+          }}
+        />
 
-        <div className="about-grid">
-          <div className="about-card">
-            <h3>Project Objectives</h3>
-            <ul>
-              <li>Provide a user-friendly platform for listing bikes.</li>
-              <li>Allow buyers to filter bikes by engine capacity and price.</li>
-              <li>Store bike details and images securely in MongoDB.</li>
-              <li>Showcase live listings uploaded by real sellers.</li>
-            </ul>
-          </div>
+        {/* Hero Section */}
+        <motion.section
+          style={{
+            padding: '120px clamp(1.5rem, 5vw, 4rem) 80px',
+            position: 'relative',
+            zIndex: 1
+          }}
+        >
+          <motion.h1
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            style={{
+              fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
+              fontWeight: 900,
+              textAlign: 'center',
+              background: 'linear-gradient(135deg, #d4af37 0%, #c0c0c0 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              marginBottom: '24px',
+              letterSpacing: '-0.03em'
+            }}
+          >
+            About BikeX
+          </motion.h1>
 
-          <div className="about-card">
-            <h3>How It Works</h3>
-            <ol>
-              <li>Seller registers and uploads bike details with images.</li>
-              <li>Data is stored in MongoDB through the Node.js backend.</li>
-              <li>Buyers browse all active bikes on the Buyer page.</li>
-              <li>Filters help buyers quickly find a suitable vehicle.</li>
-            </ol>
-          </div>
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            style={{
+              fontSize: 'clamp(1rem, 2vw, 1.25rem)',
+              color: 'rgba(241, 245, 249, 0.7)',
+              textAlign: 'center',
+              maxWidth: '800px',
+              margin: '0 auto 80px',
+              lineHeight: 1.8
+            }}
+          >
+            BikeX is your premier peer-to-peer motorcycle marketplace, connecting buyers and sellers with seamless technology and premium user experience.
+          </motion.p>
 
-          <div className="about-card">
-            <h3>Tech Stack</h3>
-            <ul>
-              <li><strong>Frontend:</strong> React, TypeScript, Vite, CSS</li>
-              <li><strong>Backend:</strong> Node.js, Express.js</li>
-              <li><strong>Database:</strong> MongoDB + Mongoose</li>
-              <li><strong>Other:</strong> Multer for image uploads, REST APIs</li>
-            </ul>
-          </div>
-        </div>
+          {/* Workflow Steps */}
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            style={{
+              maxWidth: '1200px',
+              margin: '0 auto',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+              gap: '32px',
+              padding: '0 clamp(1rem, 3vw, 2rem)'
+            }}
+          >
+            {workflowSteps.map((step, index) => (
+              <motion.div
+                key={step.title}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 + index * 0.15 }}
+                whileHover={{ y: -8, scale: 1.03 }}
+                style={{
+                  background: 'rgba(26, 26, 26, 0.6)',
+                  border: '1px solid rgba(212, 175, 55, 0.2)',
+                  borderRadius: '20px',
+                  padding: '32px',
+                  backdropFilter: 'blur(20px)',
+                  boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)',
+                  transition: 'all 0.3s ease',
+                  textAlign: 'center'
+                }}
+              >
+                <div style={{
+                  width: '60px',
+                  height: '60px',
+                  borderRadius: '50%',
+                  background: 'linear-gradient(135deg, #d4af37, #c9a22e)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 20px',
+                  fontSize: '1.5rem',
+                  fontWeight: 900,
+                  color: '#000',
+                  boxShadow: '0 12px 32px rgba(212, 175, 55, 0.4)'
+                }}>
+                  {index + 1}
+                </div>
+                <h3 style={{
+                  fontSize: '1.5rem',
+                  fontWeight: 800,
+                  marginBottom: '12px',
+                  background: 'linear-gradient(135deg, #d4af37 0%, #c0c0c0 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text'
+                }}>
+                  {step.title}
+                </h3>
+                <p style={{
+                  color: 'rgba(241, 245, 249, 0.7)',
+                  fontSize: '1rem',
+                  lineHeight: 1.6
+                }}>
+                  {step.text}
+                </p>
+              </motion.div>
+            ))}
+          </motion.div>
 
-        <div className="about-footer">
-          <p>
-            This project can be extended with features like user
-            authentication, booking test rides, chat between buyer and seller,
-            and integration with payment gateways for advance booking.
-          </p>
-        </div>
-       <h2 style={{ textAlign: "center", marginTop: "40px",color: "red" }}>Team Members</h2>
+          {/* Mission Statement */}
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.2 }}
+            style={{
+              maxWidth: '900px',
+              margin: '80px auto 0',
+              padding: '48px',
+              background: 'rgba(26, 26, 26, 0.6)',
+              border: '1px solid rgba(212, 175, 55, 0.3)',
+              borderRadius: '24px',
+              backdropFilter: 'blur(20px)',
+              boxShadow: '0 24px 70px rgba(0, 0, 0, 0.6)',
+              textAlign: 'center'
+            }}
+          >
+            <h2 style={{
+              fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
+              fontWeight: 900,
+              marginBottom: '24px',
+              background: 'linear-gradient(135deg, #d4af37 0%, #c0c0c0 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}>
+              Our Mission
+            </h2>
+            <p style={{
+              fontSize: 'clamp(1rem, 2vw, 1.2rem)',
+              color: 'rgba(241, 245, 249, 0.8)',
+              lineHeight: 1.8,
+              marginBottom: '16px'
+            }}>
+              At BikeX, we believe in empowering riders with a transparent, secure, and efficient platform to buy and sell motorcycles.
+            </p>
+            <p style={{
+              fontSize: 'clamp(1rem, 2vw, 1.2rem)',
+              color: 'rgba(241, 245, 249, 0.8)',
+              lineHeight: 1.8
+            }}>
+              Our cutting-edge technology, combined with a user-first approach, ensures every transaction is smooth, reliable, and rewarding.
+            </p>
+          </motion.div>
 
-<div className="team-container">
-  <div className="team-card">
-    <div className="team-img">
-      <img src="/images/IMG_20250901_154037.jpg" alt="Team Member 1" />
-
-    </div>
-    <h4>Technical Lead</h4>
-    <h3>K.venkateswalu</h3>
-    <ul>
-      <li>Handled complete frontend in React + TypeScript</li>
-      <li>Developed backend using Node.js & Express</li>
-      <li>Integrated MongoDB & Image Uploads</li>
-      <li>Designed and structured project architecture</li>
-    </ul>
-  </div>
-
-  <div className="team-card">
-    <div className="team-img">
-      <img src="/images/akash.jpg" alt="Team Member 2" />
-    </div>
-    <h4>Documentation Specialist</h4>
-    <h3>Akash</h3>
-    <ul>
-      <li>Prepared full project documentation</li>
-      <li>Created SRS, ERD, UML diagrams</li>
-      <li>Formatted final project report</li>
-      <li>Ensured academic formatting & structure</li>
-    </ul>
-  </div>
-
-  <div className="team-card">
-    <div className="team-img">
-      <img src="/images/maheh.jpg" alt="Team Member 3" />
-    </div>
-    <h4>Database & Research</h4>
-    <h3>Mahesh</h3>
-    <ul>
-      <li>Collected specifications of bike dataset</li>
-      <li>Organized data for MongoDB models</li>
-      <li>Verified input data consistency</li>
-      <li>Assisted in testing filter logic</li>
-    </ul>
-  </div>
-</div>
-
-      </section>
+          {/* Meet the Team */}
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            style={{
+              maxWidth: '1200px',
+              margin: '100px auto 0',
+              textAlign: 'center'
+            }}
+          >
+            <h2 style={{
+              fontSize: 'clamp(2rem, 4vw, 3rem)',
+              fontWeight: 900,
+              marginBottom: '60px',
+              background: 'linear-gradient(135deg, #d4af37 0%, #e5e5e5 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}>
+              Meet The Team
+            </h2>
+            
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '40px',
+              padding: '0 20px'
+            }}>
+              {[
+                { name: "Alex Morgan", role: "Founder & CEO", img: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80" },
+                { name: "Sarah Chen", role: "Head of Operations", img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80" },
+                { name: "Marcus Johnson", role: "Lead Developer", img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80" }
+              ].map((member, idx) => (
+                <motion.div
+                  key={idx}
+                  whileHover={{ y: -10 }}
+                  style={{
+                    background: 'rgba(26, 26, 26, 0.8)',
+                    borderRadius: '24px',
+                    overflow: 'hidden',
+                    border: '1px solid rgba(212, 175, 55, 0.15)',
+                    boxShadow: '0 20px 40px rgba(0,0,0,0.4)'
+                  }}
+                >
+                  <div style={{ height: '300px', overflow: 'hidden' }}>
+                    <img 
+                      src={member.img} 
+                      alt={member.name}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'grayscale(20%)' }}
+                    />
+                  </div>
+                  <div style={{ padding: '24px' }}>
+                    <h3 style={{ color: '#e5e5e5', fontSize: '1.5rem', marginBottom: '8px' }}>{member.name}</h3>
+                    <p style={{ color: '#d4af37', fontWeight: 600, letterSpacing: '0.05em' }}>{member.role}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </motion.section>
+      </div>
     </>
   );
 };
 
 export default About;
+

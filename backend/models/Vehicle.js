@@ -4,14 +4,39 @@ const mongoose = require("mongoose");
 
 const vehicleSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true },          // e.g. "Classic 350"
-    brand: { type: String, required: true },
-    cc: { type: Number, required: true },
+    title: { type: String, required: true },
+    brand: { type: String },
+    model: { type: String },
+    
+    // Support both old 'type' and new 'category'
+    type: { type: String }, 
+    category: { type: String }, // 'bike', 'scooter', 'ev'
+
+    cc: { type: Number },
+    engine_cc: { type: Number },
+    displacement: { type: Number },
+    
     price: { type: Number, required: true },
-    type: { type: String, enum: ["motorcycles", "scooters"], required: true },
-    imageUrl: { type: String, required: true },       // path to uploaded image
+    
+    // Images
+    imageUrl: { type: String }, // legacy single image
+    images: [{ type: String }], // new array of images
+    
+    // Details
+    year: { type: Number },
+    fuel_type: { type: String },
+    battery_range: { type: Number },
+    odometer_km: { type: Number },
+    condition: { type: String },
+    description: { type: String },
+    
+    dealership: {
+      name: String,
+      shop_id: String,
+      contact_phone: String
+    }
   },
-  { timestamps: true }
+  { timestamps: true, strict: false } // strict: false allows fields not in schema to be returned
 );
 
 module.exports = mongoose.model("Vehicle", vehicleSchema);

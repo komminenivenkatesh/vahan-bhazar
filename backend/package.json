@@ -9,6 +9,7 @@
     "start": "node server_clean.js"
   },
   "dependencies": {
+    "axios": "^1.13.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
@@ -17,7 +18,9 @@
     "mongoose": "^7.0.0",
     "morgan": "^1.10.1",
     "multer": "^1.4.4",
-    "react-router-dom": "^7.9.6"
+    "nodemailer": "^7.0.12",
+    "react-router-dom": "^7.9.6",
+    "vahan-bhazar-root": "file:.."
   },
   "devDependencies": {
     "nodemon": "^2.0.22"

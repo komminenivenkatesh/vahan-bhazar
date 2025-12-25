@@ -85,4 +85,16 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET /api/vehicles/:id (detail)
+router.get("/:id", async (req, res) => {
+  try {
+    const vehicle = await Vehicle.findById(req.params.id);
+    if (!vehicle) return res.status(404).json({ message: "Vehicle not found" });
+    res.json(vehicle);
+  } catch (err) {
+    console.error("GET /api/vehicles/:id error:", err);
+    res.status(500).json({ message: "Server error", error: err.message || String(err) });
+  }
+});
+
 module.exports = router;

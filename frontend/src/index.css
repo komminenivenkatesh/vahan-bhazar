@@ -1,7 +1,18 @@
 :root {
-  --bg: #18191a;
-  --text: #0f172a;
-  --muted: #e9eb98;
+  /* Dark Professional Theme */
+  --midnight-black: #000000;
+  --dark-gray: #0a0a0a;
+  --charcoal: #1a1a1a;
+  --silver: #808080;
+  --platinum: #e5e5e5;
+  --white: #ffffff;
+  --accent-gold: #d4af37;
+  --accent-silver: #c0c0c0;
+  
+  /* Legacy compatibility */
+  --bg: #000000;
+  --text: #e5e5e5;
+  --muted: #808080;
 }
 
 body {
