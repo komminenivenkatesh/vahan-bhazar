@@ -14,6 +14,8 @@ type User = {
 const Profile: React.FC = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
+  const [editing, setEditing] = useState(false);
+  const [editData, setEditData] = useState<{ name: string; email: string; phone: string }>({ name: '', email: '', phone: '' });
   const [activeTab, setActiveTab] = useState<"details" | "listings" | "bookings">("details");
 
   useEffect(() => {
@@ -23,7 +25,13 @@ const Profile: React.FC = () => {
       return;
     }
     try {
-      setUser(JSON.parse(storedUser));
+      const parsed = JSON.parse(storedUser);
+      setUser(parsed);
+      setEditData({
+        name: parsed.name || '',
+        email: parsed.email || '',
+        phone: parsed.phone || ''
+      });
     } catch (e) {
       console.error("Failed to parse user", e);
       navigate("/login");
@@ -177,42 +185,158 @@ const Profile: React.FC = () => {
               {activeTab === "details" && (
                 <div style={{ maxWidth: "600px" }}>
                   <h2 style={{ color: "#e5e5e5", marginBottom: "32px", fontSize: "1.5rem" }}>Personal Information</h2>
-                  
-                  <div style={{ display: "grid", gap: "24px" }}>
-                    {[
-                      { label: "Full Name", value: user.name },
-                      { label: "Email Address", value: user.email },
-                      { label: "Phone Number", value: user.phone || "Not provided" },
-                      { label: "Account Type", value: "Standard Member" }
-                    ].map((field, idx) => (
-                      <div key={idx} style={{ display: "grid", gridTemplateColumns: "150px 1fr", alignItems: "center" }}>
-                        <span style={{ color: "#808080", fontSize: "0.95rem" }}>{field.label}</span>
-                        <div style={{ 
-                          padding: "16px", 
-                          background: "rgba(0, 0, 0, 0.3)", 
-                          borderRadius: "12px", 
-                          color: "#e5e5e5",
-                          border: "1px solid rgba(255, 255, 255, 0.05)"
-                        }}>
-                          {field.value}
+                  {!editing ? (
+                    <>
+                      <div style={{ display: "grid", gap: "24px" }}>
+                        {[
+                          { label: "Full Name", value: user.name },
+                          { label: "Email Address", value: user.email },
+                          { label: "Phone Number", value: user.phone || "Not provided" },
+                          { label: "Account Type", value: "Standard Member" }
+                        ].map((field, idx) => (
+                          <div key={idx} style={{ display: "grid", gridTemplateColumns: "150px 1fr", alignItems: "center" }}>
+                            <span style={{ color: "#808080", fontSize: "0.95rem" }}>{field.label}</span>
+                            <div style={{ 
+                              padding: "16px", 
+                              background: "rgba(0, 0, 0, 0.3)", 
+                              borderRadius: "12px", 
+                              color: "#e5e5e5",
+                              border: "1px solid rgba(255, 255, 255, 0.05)"
+                            }}>
+                              {field.value}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <button
+                        style={{
+                          marginTop: "40px",
+                          padding: "14px 32px",
+                          background: "linear-gradient(135deg, #d4af37, #c9a22e)",
+                          color: "#000",
+                          border: "none",
+                          borderRadius: "12px",
+                          fontSize: "1rem",
+                          fontWeight: 700,
+                          cursor: "pointer"
+                        }}
+                        onClick={() => setEditing(true)}
+                      >
+                        Edit Profile
+                      </button>
+                    </>
+                  ) : (
+                    <form
+                      onSubmit={e => {
+                        e.preventDefault();
+                        const updated = { ...user, ...editData };
+                        setUser(updated);
+                        localStorage.setItem("user", JSON.stringify(updated));
+                        setEditing(false);
+                      }}
+                    >
+                      <div style={{ display: "grid", gap: "24px" }}>
+                        <div style={{ display: "grid", gridTemplateColumns: "150px 1fr", alignItems: "center" }}>
+                          <span style={{ color: "#808080", fontSize: "0.95rem" }}>Full Name</span>
+                          <input
+                            type="text"
+                            value={editData.name}
+                            onChange={e => setEditData(d => ({ ...d, name: e.target.value }))}
+                            style={{
+                              padding: "12px",
+                              borderRadius: "8px",
+                              border: "1px solid #d4af37",
+                              background: "#181818",
+                              color: "#e5e5e5",
+                              fontSize: "1rem"
+                            }}
+                            required
+                          />
+                        </div>
+                        <div style={{ display: "grid", gridTemplateColumns: "150px 1fr", alignItems: "center" }}>
+                          <span style={{ color: "#808080", fontSize: "0.95rem" }}>Email Address</span>
+                          <input
+                            type="email"
+                            value={editData.email}
+                            onChange={e => setEditData(d => ({ ...d, email: e.target.value }))}
+                            style={{
+                              padding: "12px",
+                              borderRadius: "8px",
+                              border: "1px solid #d4af37",
+                              background: "#181818",
+                              color: "#e5e5e5",
+                              fontSize: "1rem"
+                            }}
+                            required
+                          />
+                        </div>
+                        <div style={{ display: "grid", gridTemplateColumns: "150px 1fr", alignItems: "center" }}>
+                          <span style={{ color: "#808080", fontSize: "0.95rem" }}>Phone Number</span>
+                          <input
+                            type="text"
+                            value={editData.phone}
+                            onChange={e => setEditData(d => ({ ...d, phone: e.target.value }))}
+                            style={{
+                              padding: "12px",
+                              borderRadius: "8px",
+                              border: "1px solid #d4af37",
+                              background: "#181818",
+                              color: "#e5e5e5",
+                              fontSize: "1rem"
+                            }}
+                          />
+                        </div>
+                        <div style={{ display: "grid", gridTemplateColumns: "150px 1fr", alignItems: "center" }}>
+                          <span style={{ color: "#808080", fontSize: "0.95rem" }}>Account Type</span>
+                          <div style={{ 
+                            padding: "16px", 
+                            background: "rgba(0, 0, 0, 0.3)", 
+                            borderRadius: "12px", 
+                            color: "#e5e5e5",
+                            border: "1px solid rgba(255, 255, 255, 0.05)"
+                          }}>
+                            Standard Member
+                          </div>
                         </div>
                       </div>
-                    ))}
-                  </div>
-
-                  <button style={{
-                    marginTop: "40px",
-                    padding: "14px 32px",
-                    background: "linear-gradient(135deg, #d4af37, #c9a22e)",
-                    color: "#000",
-                    border: "none",
-                    borderRadius: "12px",
-                    fontSize: "1rem",
-                    fontWeight: 700,
-                    cursor: "pointer"
-                  }}>
-                    Edit Profile
-                  </button>
+                      <div style={{ marginTop: "40px", display: "flex", gap: "16px" }}>
+                        <button
+                          type="submit"
+                          style={{
+                            padding: "14px 32px",
+                            background: "linear-gradient(135deg, #d4af37, #c9a22e)",
+                            color: "#000",
+                            border: "none",
+                            borderRadius: "12px",
+                            fontSize: "1rem",
+                            fontWeight: 700,
+                            cursor: "pointer"
+                          }}
+                        >
+                          Save
+                        </button>
+                        <button
+                          type="button"
+                          style={{
+                            padding: "14px 32px",
+                            background: "transparent",
+                            border: "1px solid #d4af37",
+                            color: "#d4af37",
+                            borderRadius: "12px",
+                            fontSize: "1rem",
+                            fontWeight: 700,
+                            cursor: "pointer"
+                          }}
+                          onClick={() => {
+                            setEditing(false);
+                            setEditData({ name: user.name, email: user.email, phone: user.phone });
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                  )}
                 </div>
               )}
 

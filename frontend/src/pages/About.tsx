@@ -240,10 +240,10 @@ const About: React.FC = () => {
               gap: '40px',
               padding: '0 20px'
             }}>
-              {[
-                { name: "Alex Morgan", role: "Founder & CEO", img: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80" },
-                { name: "Sarah Chen", role: "Head of Operations", img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80" },
-                { name: "Marcus Johnson", role: "Lead Developer", img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80" }
+                {[
+                { name: "k.venkateswarlu", role: "Technical Lead", img: "/uploads/venky.jpeg" },
+                { name: "Akash", role: "Decumentation Specialist", img: "/uploads/akash.jpeg" },
+                { name: "Mahesh", role: "Database & Research", img: "/uploads/mahesh.jpeg" }
               ].map((member, idx) => (
                 <motion.div
                   key={idx}

@@ -13,7 +13,7 @@ export type Vehicle = {
 };
 
 export async function fetchVehicles(): Promise<{ total: number; vehicles: Vehicle[] }> {
-  const base = import.meta.env.VITE_API_BASE || 'http://localhost:5000';
+  const base = import.meta.env.VITE_API_URL || 'http://localhost:5000';
   const res = await fetch(`${base}/api/vehicles`);
   if (!res.ok) throw new Error('Failed to fetch vehicles');
   return res.json();
