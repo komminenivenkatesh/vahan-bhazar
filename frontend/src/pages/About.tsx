@@ -241,7 +241,7 @@ const About: React.FC = () => {
               padding: '0 20px'
             }}>
                 {[
-                { name: "k.venkateswarlu", role: "Technical Lead", img: "/uploads/venky.jpeg" },
+                { name: "k.venkateswarlu", role: "Technical Lead & Team Leader", img: "/uploads/venky.jpeg" },
                 { name: "Akash", role: "Decumentation Specialist", img: "/uploads/akash.jpeg" },
                 { name: "Mahesh", role: "Database & Research", img: "/uploads/mahesh.jpeg" }
               ].map((member, idx) => (
