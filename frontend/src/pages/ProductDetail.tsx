@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 
 type Vehicle = {
@@ -31,13 +31,6 @@ const ProductDetail: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState(0);
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"]
-  });
-
-  const y1 = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const y2 = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
 
   useEffect(() => {
     const fetchVehicle = async () => {
@@ -133,8 +126,7 @@ const ProductDetail: React.FC = () => {
             height: '450px',
             borderRadius: '50%',
             background: 'radial-gradient(circle, rgba(212,175,55,0.15) 0%, rgba(212,175,55,0) 70%)',
-            filter: 'blur(70px)',
-            y: y1,
+            filter: 'blur(70px)'
           }}
         />
         <motion.div
@@ -146,10 +138,16 @@ const ProductDetail: React.FC = () => {
             height: '550px',
             borderRadius: '50%',
             background: 'radial-gradient(circle, rgba(192,192,192,0.12) 0%, rgba(192,192,192,0) 70%)',
-            filter: 'blur(90px)',
-            y: y2,
+            filter: 'blur(90px)'
           }}
         />
+
+        {/* Debug badge to confirm component mounts */}
+        <div style={{position: 'fixed', top: 12, left: 12, zIndex: 10001}}>
+          <div style={{background: '#ff0055', color: '#fff', padding: '6px 10px', borderRadius: 8, fontWeight: 700}}>
+            ProductDetail: {id}
+          </div>
+        </div>
 
         <motion.section
           style={{

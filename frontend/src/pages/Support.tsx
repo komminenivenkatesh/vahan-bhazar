@@ -125,7 +125,7 @@ const Support: React.FC = () => {
               lineHeight: 1.6
             }}
           >
-            Facing any issues with BikeX? We're here to help.
+            Facing any issues with Vahan Bazar? We're here to help.
           </motion.p>
 
           {/* Common Issues */}

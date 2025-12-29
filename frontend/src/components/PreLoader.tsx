@@ -71,7 +71,7 @@ const PreLoader: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
                 margin: 0,
               }}
             >
-              BikeX
+              Vahan Bazar
             </motion.h1>
             <motion.div
               initial={{ width: 0 }}

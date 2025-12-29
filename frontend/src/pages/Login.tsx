@@ -241,7 +241,7 @@ else {
                 letterSpacing: "-0.02em",
               }}
             >
-              {isLogin ? "Welcome Back" : "Join BikeX"}
+              {isLogin ? "Welcome Back" : "Join Vahan Bazar"}
             </motion.h1>
             <p style={{ color: "#cbd5e1", fontSize: "1rem" }}>
               {isLogin ? "Sign in to access your account" : "Create your account to get started"}

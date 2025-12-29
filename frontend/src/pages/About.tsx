@@ -76,7 +76,7 @@ const About: React.FC = () => {
               letterSpacing: '-0.03em'
             }}
           >
-            About BikeX
+            About Vahan Bazar
           </motion.h1>
 
           <motion.p
@@ -92,7 +92,7 @@ const About: React.FC = () => {
               lineHeight: 1.8
             }}
           >
-            BikeX is your premier peer-to-peer motorcycle marketplace, connecting buyers and sellers with seamless technology and premium user experience.
+            Vahan Bazar is your premier peer-to-peer motorcycle marketplace, connecting buyers and sellers with seamless technology and premium user experience.
           </motion.p>
 
           {/* Workflow Steps */}
@@ -199,7 +199,7 @@ const About: React.FC = () => {
               lineHeight: 1.8,
               marginBottom: '16px'
             }}>
-              At BikeX, we believe in empowering riders with a transparent, secure, and efficient platform to buy and sell motorcycles.
+              At Vahan Bazar, we believe in empowering riders with a transparent, secure, and efficient platform to buy and sell motorcycles.
             </p>
             <p style={{
               fontSize: 'clamp(1rem, 2vw, 1.2rem)',

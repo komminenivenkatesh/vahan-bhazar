@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import PreLoader from "./components/PreLoader";
-import CustomCursor from "./components/CustomCursor";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import Support from "./pages/Support";
@@ -45,7 +44,7 @@ const App: React.FC = () => {
           <Route path="/seller" element={<ProtectedRoute><Seller /></ProtectedRoute>} />
           <Route path="/sell" element={<ProtectedRoute><Seller /></ProtectedRoute>} />
           <Route path="/motorcycle" element={<ProtectedRoute><MotorcyclePage /></ProtectedRoute>} />
-          <Route path="/product/:id" element={<ProtectedRoute><ProductDetail /></ProtectedRoute>} />
+          <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/vehicle/:id" element={<ProtectedRoute><VehicleDetail /></ProtectedRoute>} />
           <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
           <Route path="/payment" element={<ProtectedRoute><Payment /></ProtectedRoute>} />

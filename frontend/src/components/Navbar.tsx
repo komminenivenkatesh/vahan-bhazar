@@ -109,8 +109,8 @@ export default function Navbar() {
             position: "relative",
           }}
         >
-          BikeX
-          <motion.div
+          Vahan Bazar
+           <motion.div
             style={{
               position: "absolute",
               bottom: -4,

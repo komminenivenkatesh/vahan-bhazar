@@ -17,6 +17,28 @@ body {
   letter-spacing: 0.01em;
 }
 
+/* Custom cursor styles */
+.custom-cursor {
+  position: fixed;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(20, 184, 166, 0.95);
+  transform: translate(-50%, -50%);
+  transition: transform 120ms ease, width 120ms ease, height 120ms ease, background 120ms ease, opacity 120ms ease;
+  z-index: 9999;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.custom-cursor.hover {
+  transform: translate(-50%, -50%) scale(1.9);
+  background: rgba(14, 165, 233, 0.95);
+}
+
+/* Optional: hide the native cursor when you want the custom one active. */
+body.hide-native-cursor { cursor: none; }
+
 #root {
   margin: 0;
   padding: 0;
