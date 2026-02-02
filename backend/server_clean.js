@@ -26,6 +26,8 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
+// 🔥 IMPORTANT — mount vehicles router
+app.use("/api/vehicles", vehicleRoutes);
 if (morgan) app.use(morgan("dev"));
 else app.use((req, res, next) => {
   if (process.env.NODE_ENV !== "production") {
@@ -72,17 +74,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, message: "Server error" });
 });
 
-// Start server with error handling for common issues (EADDRINUSE)
+// Start server
 const PORT = process.env.PORT || 5000;
-const server = app.listen(PORT, () => console.log(`⚡ Server running at http://localhost:${PORT}`));
-
-server.on('error', (err) => {
-  if (err && err.code === 'EADDRINUSE') {
-    console.error(`Port ${PORT} is already in use. Is another server running?`);
-    console.error('If you intended to run multiple servers, set a different PORT in your env.');
-    process.exit(1);
-  } else {
-    console.error('Server error:', err);
-    process.exit(1);
-  }
-});
+app.listen(PORT, () => console.log(`⚡ Server running at http://localhost:${PORT}`));

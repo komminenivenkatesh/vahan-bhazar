@@ -14,10 +14,8 @@ export default function Navbar() {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { scrollY } = useScroll();
   const navOpacity = useTransform(scrollY, [0, 100], [0.95, 1]);
-  const navBlur = useTransform(scrollY, [0, 100], [20, 30]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -52,7 +50,6 @@ export default function Navbar() {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/market?search=${encodeURIComponent(searchQuery)}`);
-      setIsSearchOpen(false);
     }
   };
 

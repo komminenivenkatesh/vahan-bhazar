@@ -77,7 +77,7 @@ const About: React.FC = () => {
             }}
           >
             About Vahan Bazar
-          </motion.h1>
+           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 30 }}

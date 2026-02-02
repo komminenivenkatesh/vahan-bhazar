@@ -42,7 +42,9 @@ const Profile: React.FC = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     localStorage.removeItem("bikeXUser");
-    navigate("/login");
+    // navigate to login and force a reload so other components pick up cleared auth state
+    navigate("/login", { replace: true });
+    setTimeout(() => window.location.reload(), 50);
   };
 
   if (!user) return null;
