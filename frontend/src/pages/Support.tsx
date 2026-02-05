@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import "../App.css";
 import Navbar from "../components/Navbar";
@@ -35,6 +35,13 @@ const Support: React.FC = () => {
   const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(null);
   const [message, setMessage] = useState("");
   const [formMessage, setFormMessage] = useState("");
+  // Chatbot state
+  type Message = { id: number; sender: "user" | "bot"; text: string };
+  const [messages, setMessages] = useState<Message[]>([
+    { id: Date.now(), sender: "bot", text: "Hi! I can help with renting, selling, and payment issues. Ask me anything." },
+  ]);
+  const [chatInput, setChatInput] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -51,6 +58,55 @@ const Support: React.FC = () => {
     setMessage("");
     setSelectedIssue(null);
   };
+
+  // Simple keyword-based bot response generator
+  function generateBotResponse(userText: string) {
+    const t = userText.toLowerCase();
+    if (t.includes("rent") || t.includes("renting") || t.includes("hire")) {
+      return (
+        "To rent a vehicle: browse listings on the Home page, choose a vehicle,\n" +
+        "click 'Rent' or 'Checkout', provide your rental dates and contact details, and complete payment.\n" +
+        "If you need help with dates or documents, I can guide you further."
+      );
+    }
+    if (t.includes("sell") || t.includes("listing") || t.includes("post")) {
+      return (
+        "To sell: go to the Seller page, click 'Create Listing', fill in accurate details and clear photos,\n" +
+        "set a fair price, then submit. Your listing will appear for buyers. Need tips for good photos?"
+      );
+    }
+    if (t.includes("payment") || t.includes("pay") || t.includes("checkout")) {
+      return (
+        "Payment issues: ensure your card details are correct and you have sufficient balance.\n" +
+        "If a transaction failed, please check your bank/UPI app, then try again. If you still face problems, I can raise a ticket for support."
+      );
+    }
+    // fallback
+    return (
+      "I can connect you to a human agent for more help. Would you like me to create a support ticket?"
+    );
+  }
+
+  // Send message handler
+  const sendMessage = () => {
+    const text = chatInput.trim();
+    if (!text) return;
+    const userMsg: Message = { id: Date.now(), sender: "user", text };
+    setMessages((m) => [...m, userMsg]);
+    setChatInput("");
+
+    // Mock async bot reply
+    setTimeout(() => {
+      const botText = generateBotResponse(text);
+      const botMsg: Message = { id: Date.now() + 1, sender: "bot", text: botText };
+      setMessages((m) => [...m, botMsg]);
+    }, 600);
+  };
+
+  // Auto-scroll when messages update
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   return (
     <>
@@ -265,6 +321,43 @@ const Support: React.FC = () => {
                 {formMessage}
               </motion.p>
             )}
+          </motion.div>
+
+          {/* AI Chatbot */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.7 }}
+            style={{ maxWidth: '900px', margin: '0 auto 40px' }}
+          >
+            <div className="bg-gradient-to-r from-slate-900/80 via-slate-800/60 to-slate-900/80 p-6 rounded-2xl shadow-lg border border-slate-700">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-bold text-slate-100">AI Assistant</h3>
+                <p className="text-sm text-slate-400">Ask about renting, selling, or payments</p>
+              </div>
+
+              <div className="h-64 md:h-80 overflow-y-auto rounded-lg p-4 bg-slate-900/60 border border-slate-700" id="chat-window">
+                {messages.map((m) => (
+                  <div key={m.id} className={`flex ${m.sender === 'user' ? 'justify-end' : 'justify-start'} mb-3`}> 
+                    <div className={`${m.sender === 'user' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-100'} max-w-[80%] px-4 py-2 rounded-xl shadow-sm whitespace-pre-wrap`}>
+                      {m.text}
+                    </div>
+                  </div>
+                ))}
+                <div ref={messagesEndRef} />
+              </div>
+
+              <div className="mt-4 flex gap-3">
+                <input
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
+                  placeholder="Type a question, e.g. 'How to rent?'"
+                  className="flex-1 px-4 py-3 rounded-lg bg-slate-800 border border-slate-700 text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button onClick={sendMessage} className="px-5 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow">Send</button>
+              </div>
+            </div>
           </motion.div>
 
           {/* FAQs */}

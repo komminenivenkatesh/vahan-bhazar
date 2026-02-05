@@ -17,6 +17,7 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import Login from "./pages/Login";
 import OtpVerification from "./pages/OtpVerification";
 import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import Profile from "./pages/Profile";
 
 const App: React.FC = () => {
@@ -33,6 +34,7 @@ const App: React.FC = () => {
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/verify-otp/:userId" element={<OtpVerification />} />
           <Route path="/verify-otp" element={<OtpVerification />} />
 

@@ -33,16 +33,16 @@ router.post("/forgot-password", async (req, res) => {
     user.resetTokenExpiresAt = Date.now() + 15 * 60 * 1000; // 15 minutes
     await user.save();
 
-   const resetLink = `http://192.168.1.5:3000/reset-password/${token}`;
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+    const resetLink = `${frontendUrl}/reset-password/${token}`;
 
+    try {
+      await sendResetPasswordEmail(email, resetLink);
+    } catch (e) {
+      console.error("Warning: failed to send reset email", e);
+    }
 
-    await sendResetPasswordEmail(
-      email,
-      "Password Reset",
-      `Click this link to reset your password:\n${resetLink}`
-    );
-
-    res.json({ message: "Reset link sent to email" });
+    res.json({ message: "Reset link processed (if email configured, link was sent)." });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
@@ -87,8 +87,17 @@ router.post("/register", async (req, res) => {
 
     await user.save();
 
-    await sendOtpEmail(email, emailOtp);
-    await sendOtpSms(phone, phoneOtp);
+    try {
+      await sendOtpEmail(email, emailOtp);
+    } catch (e) {
+      console.error("Warning: failed to send OTP email", e);
+    }
+
+    try {
+      await sendOtpSms(phone, phoneOtp);
+    } catch (e) {
+      console.error("Warning: failed to send OTP SMS", e);
+    }
 
     return res.status(201).json({
       message: "User registered. OTPs sent to email and phone.",
@@ -233,6 +242,47 @@ router.post("/verify-phone", async (req, res) => {
     return res.json({ message: "Phone number verified successfully." });
   } catch (error) {
     console.error("verify-phone error:", error);
+    return res.status(500).json({ message: "Server error." });
+  }
+});
+
+/**
+ * POST /api/auth/reset-password
+ * Body: { token, newPassword }
+ */
+router.post("/reset-password", async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+      return res.status(400).json({ message: "Token and newPassword are required." });
+    }
+
+    const user = await User.findOne({ resetToken: token });
+    if (!user) return res.status(400).json({ message: "Invalid or expired token." });
+
+    if (!user.resetTokenExpiresAt || user.resetTokenExpiresAt < Date.now()) {
+      return res.status(400).json({ message: "Invalid or expired token." });
+    }
+
+    user.passwordHash = await bcrypt.hash(newPassword, 10);
+    user.resetToken = undefined;
+    user.resetTokenExpiresAt = undefined;
+    // mark email as verified after successful password reset to allow login
+    user.isEmailVerified = true;
+    await user.save();
+
+    try {
+      const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+      const loginUrl = `${frontendUrl}/login`;
+      await sendResetPasswordEmail(user.email, loginUrl);
+    } catch (e) {
+      console.error("Warning: failed to send confirmation email", e);
+    }
+
+    return res.json({ message: "Password reset successful." });
+  } catch (error) {
+    console.error("reset-password error:", error);
     return res.status(500).json({ message: "Server error." });
   }
 });

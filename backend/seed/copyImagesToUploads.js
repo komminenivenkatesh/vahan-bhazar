@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose');
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/vahanbazar';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://komminenivenkatesh045_db_user:%40Venky210606@vahan-bazar-db.ethum2q.mongodb.net/';
 
 async function main() {
   await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });

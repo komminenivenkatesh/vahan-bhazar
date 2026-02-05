@@ -68,7 +68,7 @@ const samples = [
 ];
 
 (async () => {
-  const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/vahanbazar';
+  const mongoUri = process.env.MONGO_URI || 'mongodb+srv://komminenivenkatesh045_db_user:%40Venky210606@vahan-bazar-db.ethum2q.mongodb.net/';
   console.log('Using MONGO_URI =', mongoUri);
 
   // Path to the uploaded file you provided in this session:

@@ -37,7 +37,7 @@ else app.use((req, res, next) => {
 });
 
 // Connect to MongoDB (pass MONGO_URI via env or fallback)
-connectDB(process.env.MONGO_URI || "mongodb://localhost:27017/vahanbazar");
+connectDB(process.env.MONGO_URI || "mongodb+srv://komminenivenkatesh045_db_user:%40Venky210606@vahan-bazar-db.ethum2q.mongodb.net/");
 
 // Serve uploaded images as static files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
