@@ -15,6 +15,7 @@ const Login: React.FC = () => {
     null
   );
   const [loading, setLoading] = useState(false);
+  const [unverifiedUserId, setUnverifiedUserId] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
@@ -35,6 +36,7 @@ const Login: React.FC = () => {
     setIsLogin(loginMode);
     setMessage(null);
     setMessageType(null);
+    setUnverifiedUserId(null);
     resetForm();
   };
 
@@ -87,17 +89,26 @@ const Login: React.FC = () => {
       const data = await res.json();
 
       if (!res.ok) {
-  // backend sends specific messages
-  if (data.message === "Invalid email") {
-    setMessage("Invalid email");
-  } else if (data.message === "Incorrect password") {
-    setMessage("Incorrect password");
-  } else {
-    setMessage(data.message || "Something went wrong. Please try again.");
-  }
-  setMessageType("error");
-  return;
-}
+        // Check if user is not verified yet
+        if (data.userId && (res.status === 403 || data.isEmailVerified === false)) {
+          setUnverifiedUserId(data.userId);
+          localStorage.setItem("pendingUserId", data.userId);
+          setMessage("Your email is not verified yet. Click 'Verify Email Now' below to enter your OTP or request a new one.");
+          setMessageType("error");
+          return;
+        }
+
+        // backend sends specific messages
+        if (data.message === "Invalid email") {
+          setMessage("Invalid email");
+        } else if (data.message === "Incorrect password") {
+          setMessage("Incorrect password");
+        } else {
+          setMessage(data.message || "Something went wrong. Please try again.");
+        }
+        setMessageType("error");
+        return;
+      }
 
 
       if (isLogin) {
@@ -291,7 +302,7 @@ else {
 
             {message && (
               <div style={{
-                marginBottom: "1rem",
+                marginBottom: unverifiedUserId ? "0.75rem" : "1rem",
                 padding: "0.75rem 1rem",
                 borderRadius: 12,
                 fontSize: "0.9rem",
@@ -301,6 +312,39 @@ else {
               }}>
                 {message}
               </div>
+            )}
+
+            {unverifiedUserId && (
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                style={{ marginBottom: "1.2rem" }}
+              >
+                <button
+                  type="button"
+                  onClick={() => navigate(`/verify-otp/${unverifiedUserId}`, {
+                    state: { infoMessage: "Please enter your email OTP to verify your account, or click 'Resend OTP'." }
+                  })}
+                  style={{
+                    width: "100%",
+                    padding: "0.85rem",
+                    borderRadius: 12,
+                    border: "none",
+                    background: "linear-gradient(135deg, #d4af37, #b8860b)",
+                    color: "#000",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    fontSize: "0.95rem",
+                    boxShadow: "0 4px 15px rgba(212, 175, 55, 0.3)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "8px"
+                  }}
+                >
+                  Verify Email Now →
+                </button>
+              </motion.div>
             )}
 
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>

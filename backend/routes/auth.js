@@ -107,22 +107,28 @@ router.post("/register", async (req, res) => {
 
 /**
  * POST /api/auth/resend-otp
- * Body: { userId }
+ * Body: { userId, email }
  */
 router.post("/resend-otp", async (req, res) => {
   try {
-    const { userId } = req.body;
-    if (!userId) {
-      return res.status(400).json({ message: "User ID is required." });
+    const { userId, email } = req.body;
+    if (!userId && !email) {
+      return res.status(400).json({ message: "User ID or registered email is required." });
     }
 
-    const user = await User.findById(userId);
+    let user = null;
+    if (userId) {
+      user = await User.findById(userId);
+    } else if (email) {
+      user = await User.findOne({ email: email.trim().toLowerCase() });
+    }
+
     if (!user) {
-      return res.status(404).json({ message: "User not found." });
+      return res.status(404).json({ message: "Account not found for the provided information." });
     }
 
     if (user.isEmailVerified) {
-      return res.status(400).json({ message: "Email is already verified. You can log in." });
+      return res.status(400).json({ message: "Email is already verified. You can log in directly." });
     }
 
     const newOtp = generateOtp(6);
@@ -136,11 +142,16 @@ router.post("/resend-otp", async (req, res) => {
         new Promise((_, reject) => setTimeout(() => reject(new Error("Email server timed out")), 6000))
       ]);
       console.log(`📧 Resent OTP to ${user.email}`);
-      return res.json({ message: `New OTP sent to ${user.email}! Please check inbox and spam folder.` });
+      return res.json({
+        message: `New OTP sent to ${user.email}! Please check inbox and spam folder.`,
+        userId: user._id,
+        email: user.email
+      });
     } catch (mailErr) {
       console.error("Failed to resend email:", mailErr);
       return res.status(500).json({
-        message: `Failed to send email (${mailErr.message}). Check spam or verify email configuration.`
+        message: `Failed to send email (${mailErr.message}). Check spam or verify email configuration.`,
+        userId: user._id
       });
     }
   } catch (err) {
@@ -175,7 +186,12 @@ router.post("/login", async (req, res) => {
     }
 
     if (!user.isEmailVerified) {
-      return res.status(403).json({ message: "Please verify your email first." });
+      return res.status(403).json({
+        message: "Please verify your email first.",
+        isEmailVerified: false,
+        userId: user._id,
+        email: user.email,
+      });
     }
 
     // Optional: enforce phone verification too

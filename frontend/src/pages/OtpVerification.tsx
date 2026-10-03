@@ -12,6 +12,7 @@ const OtpVerification: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [userId, setUserId] = useState<string | null>(null);
+  const [inputEmail, setInputEmail] = useState("");
   const [emailOtp, setEmailOtp] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [messageType, setMessageType] = useState<"success" | "error" | null>(null);
@@ -47,9 +48,10 @@ const OtpVerification: React.FC = () => {
     setMessageType(type);
   };
 
-  const handleResendOtp = async () => {
-    if (!userId) {
-      showMessage("User ID not found. Please register again.", "error");
+  const handleResendOtp = async (overrideEmail?: string) => {
+    const targetEmail = overrideEmail || inputEmail;
+    if (!userId && !targetEmail) {
+      showMessage("Please enter your registered email address.", "error");
       return;
     }
     try {
@@ -59,13 +61,17 @@ const OtpVerification: React.FC = () => {
       const res = await fetch(`${BACKEND_BASE}/api/auth/resend-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
+        body: JSON.stringify({ userId: userId || undefined, email: targetEmail || undefined }),
       });
 
       const data = await res.json();
       if (!res.ok) {
         showMessage(data.message || "Failed to resend OTP.", "error");
       } else {
+        if (data.userId) {
+          setUserId(data.userId);
+          localStorage.setItem("pendingUserId", data.userId);
+        }
         showMessage(data.message || "New OTP sent! Please check your email inbox and spam folder.", "success");
       }
     } catch (err: any) {
@@ -221,11 +227,49 @@ const OtpVerification: React.FC = () => {
               </motion.div>
             )}
 
-            {!userId && (
-              <div style={{ color: '#ef4444', textAlign: 'center', marginBottom: '20px' }}>
-                No user found. Please go back and register again.
+            {!userId ? (
+              <div style={{ marginBottom: '24px' }}>
+                <p style={{ color: '#d4af37', fontSize: '0.9rem', marginBottom: '10px' }}>
+                  Enter your registered email to receive an OTP:
+                </p>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <input
+                    type="email"
+                    value={inputEmail}
+                    placeholder="name@example.com"
+                    onChange={(e) => setInputEmail(e.target.value)}
+                    style={{
+                      flex: 1,
+                      background: 'rgba(0, 0, 0, 0.3)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '12px',
+                      padding: '12px 16px',
+                      color: '#fff',
+                      outline: 'none',
+                      fontSize: '0.95rem'
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleResendOtp(inputEmail)}
+                    disabled={resending || !inputEmail}
+                    style={{
+                      background: 'linear-gradient(135deg, #d4af37, #b8860b)',
+                      border: 'none',
+                      borderRadius: '12px',
+                      padding: '0 18px',
+                      color: '#000',
+                      fontWeight: 600,
+                      cursor: resending || !inputEmail ? 'not-allowed' : 'pointer',
+                      opacity: resending || !inputEmail ? 0.7 : 1,
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    {resending ? "Sending..." : "Send OTP"}
+                  </button>
+                </div>
               </div>
-            )}
+            ) : null}
 
             {/* Email OTP */}
             <form onSubmit={handleVerifyEmail} style={{ marginBottom: '30px' }}>
@@ -273,7 +317,7 @@ const OtpVerification: React.FC = () => {
                   </span>
                   <button
                     type="button"
-                    onClick={handleResendOtp}
+                    onClick={() => handleResendOtp()}
                     disabled={resending || !userId}
                     style={{
                       background: 'none',
