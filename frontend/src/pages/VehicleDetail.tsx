@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Navbar from "../components/Navbar";
 
-const BACKEND_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const BACKEND_BASE = import.meta.env.VITE_API_URL || "https://vahan-bhazar-backend.onrender.com";
 const FALLBACK_LOCAL_IMAGE = "/default-bike.png";
 
 export type Vehicle = {

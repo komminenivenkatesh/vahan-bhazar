@@ -17,7 +17,7 @@ type Vehicle = {
   images?: string[];
 };
 
-const BACKEND_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const BACKEND_BASE = import.meta.env.VITE_API_URL || "https://vahan-bhazar-backend.onrender.com";
 const FALLBACK_LOCAL_IMAGE = "/fallback-bike.png";
 
 const MotorcyclePage: React.FC = () => {

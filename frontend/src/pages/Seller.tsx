@@ -15,6 +15,8 @@ type VehicleCreateResponse = {
   createdAt?: string;
 };
 
+const BACKEND_BASE = import.meta.env.VITE_API_URL || "https://vahan-bhazar-backend.onrender.com";
+
 const Seller: React.FC = () => {
   const navigate = useNavigate();
 
@@ -83,8 +85,7 @@ const Seller: React.FC = () => {
       formData.append("type", type);
       formData.append("image", image);
 
-      const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
-      const res = await fetch(`${API}/api/vehicles/upload`, {
+      const res = await fetch(`${BACKEND_BASE}/api/vehicles/upload`, {
         method: "POST",
         body: formData,
       });
@@ -510,7 +511,7 @@ const Seller: React.FC = () => {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '24px', alignItems: 'center' }}>
                 <div>
                   <img
-                    src={uploadedVehicle.imageUrl.startsWith("http") ? uploadedVehicle.imageUrl : `http://localhost:5000${uploadedVehicle.imageUrl}`}
+                    src={uploadedVehicle.imageUrl.startsWith("http") ? uploadedVehicle.imageUrl : `${BACKEND_BASE}${uploadedVehicle.imageUrl}`}
                     alt={uploadedVehicle.title}
                     style={{ width: '100%', borderRadius: '16px', border: '2px solid rgba(20, 184, 166, 0.3)' }}
                     onError={(e) => {

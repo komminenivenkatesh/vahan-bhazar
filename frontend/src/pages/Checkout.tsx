@@ -15,7 +15,7 @@ type Vehicle = {
 
 type PaymentMethod = "card" | "upi" | "netbanking";
 
-const BACKEND_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const BACKEND_BASE = import.meta.env.VITE_API_URL || "https://vahan-bhazar-backend.onrender.com";
 
 const Checkout: React.FC = () => {
   const navigate = useNavigate();

@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import type { MotionProps } from "framer-motion";
 import { motion, useScroll, useSpring, useTransform, useInView } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import "../App.css";
@@ -19,7 +18,7 @@ type Vehicle = {
   odometer_km?: number;
 };
 
-const BACKEND_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const BACKEND_BASE = import.meta.env.VITE_API_URL || "https://vahan-bhazar-backend.onrender.com";
 
 const heroStats = [
   { label: "Verified listings", value: "1.2k+", icon: "✓" },
@@ -296,7 +295,7 @@ const Home: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.6 }}
               style={{ display: 'flex', gap: 40, justifyContent: 'center', flexWrap: 'wrap' }}
             >
-              {heroStats.map((stat, idx) => (
+              {heroStats.map((stat) => (
                 <motion.div
                   key={stat.label}
                   whileHover={{ y: -5 }}

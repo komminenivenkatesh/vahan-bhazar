@@ -22,7 +22,7 @@ type Vehicle = {
 
 type Tab = "motorcycles" | "scooters";
 
-const BACKEND_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const BACKEND_BASE = import.meta.env.VITE_API_URL || "https://vahan-bhazar-backend.onrender.com";
 const FALLBACK_LOCAL_IMAGE = "/mnt/data/833ac447-1bd5-4653-85d8-18d4e6a105a0.png";
 
 const Buyer: React.FC = () => {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import "../App.css";
 import Navbar from "../components/Navbar";
 
@@ -17,11 +17,6 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-
-  const { scrollYProgress } = useScroll();
-  const layerBgY = useTransform(scrollYProgress, [0, 1], ["0%", "-16%"]);
-  const layerGlowY = useTransform(scrollYProgress, [0, 1], ["0%", "-22%"]);
-  const layerGrainY = useTransform(scrollYProgress, [0, 1], ["0%", "-28%"]);
 
   const float = {
     initial: { opacity: 0, y: 20 },
@@ -58,9 +53,10 @@ const Login: React.FC = () => {
     try {
       setLoading(true);
 
+      const BACKEND_BASE = import.meta.env.VITE_API_URL || "https://vahan-bhazar-backend.onrender.com";
       const endpoint = isLogin
-        ? "http://localhost:5000/api/auth/login"
-        : "http://localhost:5000/api/auth/register";
+        ? `${BACKEND_BASE}/api/auth/login`
+        : `${BACKEND_BASE}/api/auth/register`;
 
       let body: any;
 

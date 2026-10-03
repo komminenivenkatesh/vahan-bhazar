@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
+const BACKEND_BASE = import.meta.env.VITE_API_URL || "https://vahan-bhazar-backend.onrender.com";
+
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState<string | null>(null);
@@ -22,7 +24,7 @@ const ForgotPassword: React.FC = () => {
     try {
       setLoading(true);
       const res = await fetch(
-        "http://localhost:5000/api/auth/forgot-password",
+        `${BACKEND_BASE}/api/auth/forgot-password`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

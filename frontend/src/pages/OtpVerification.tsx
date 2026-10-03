@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Navbar from "../components/Navbar";
 
+const BACKEND_BASE = import.meta.env.VITE_API_URL || "https://vahan-bhazar-backend.onrender.com";
+
 const OtpVerification: React.FC = () => {
   const { userId: routeUserId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
@@ -57,7 +59,7 @@ const OtpVerification: React.FC = () => {
       setLoadingEmail(true);
       setMessage(null);
 
-      const res = await fetch("http://localhost:5000/api/auth/verify-email", {
+      const res = await fetch(`${BACKEND_BASE}/api/auth/verify-email`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, otp: emailOtp }),
@@ -94,7 +96,7 @@ const OtpVerification: React.FC = () => {
       setLoadingPhone(true);
       setMessage(null);
 
-      const res = await fetch("http://localhost:5000/api/auth/verify-phone", {
+      const res = await fetch(`${BACKEND_BASE}/api/auth/verify-phone`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, otp: phoneOtp }),

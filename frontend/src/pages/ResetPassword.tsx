@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 
+const BACKEND_BASE = import.meta.env.VITE_API_URL || "https://vahan-bhazar-backend.onrender.com";
+
 const ResetPassword: React.FC = () => {
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
@@ -22,7 +24,7 @@ const ResetPassword: React.FC = () => {
 
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:5000/api/auth/reset-password", {
+      const res = await fetch(`${BACKEND_BASE}/api/auth/reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, newPassword: password }),
