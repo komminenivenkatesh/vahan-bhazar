@@ -87,7 +87,7 @@ router.post("/register", async (req, res) => {
     try {
       await Promise.race([
         sendOtpEmail(email, emailOtp),
-        new Promise((_, reject) => setTimeout(() => reject(new Error("Email server timed out")), 5000))
+        new Promise((_, reject) => setTimeout(() => reject(new Error("Email server timed out")), 15000))
       ]);
       console.log(`📧 OTP email sent to ${email}`);
     } catch (e) {
@@ -139,7 +139,7 @@ router.post("/resend-otp", async (req, res) => {
     try {
       await Promise.race([
         sendOtpEmail(user.email, newOtp),
-        new Promise((_, reject) => setTimeout(() => reject(new Error("Email server timed out")), 6000))
+        new Promise((_, reject) => setTimeout(() => reject(new Error("Email server timed out")), 15000))
       ]);
       console.log(`📧 Resent OTP to ${user.email}`);
       return res.json({

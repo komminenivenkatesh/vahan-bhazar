@@ -1,12 +1,21 @@
 // mailer.js
 const nodemailer = require("nodemailer");
 
+const emailUser = process.env.EMAIL_USER || "vahanbazar045@gmail.com";
+const emailPass = process.env.EMAIL_PASS || "vbedboqhxqdrenox";
+
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
-    user: process.env.EMAIL_USER, // Gmail address
-    pass: process.env.EMAIL_PASS, // Gmail App Password
+    user: emailUser,
+    pass: emailPass,
   },
+  family: 4, // Force IPv4 to prevent hanging on Render / cloud Linux
+  connectionTimeout: 12000,
+  greetingTimeout: 8000,
+  socketTimeout: 15000,
 });
 
 /* =========================================================
@@ -44,7 +53,7 @@ Do not share this code with anyone.`;
   `;
 
   const mailOptions = {
-    from: `${appName} <${process.env.EMAIL_USER}>`,
+    from: `${appName} <${emailUser}>`,
     to: toEmail,
     subject: `${appName} - Email Verification Code`,
     text: textBody,
@@ -100,7 +109,7 @@ If you did not request this, ignore this email.`;
   `;
 
   const mailOptions = {
-    from: `${appName} <${process.env.EMAIL_USER}>`,
+    from: `${appName} <${emailUser}>`,
     to: toEmail,
     subject: `${appName} - Reset Your Password`,
     text: textBody,
