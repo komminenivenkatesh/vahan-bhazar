@@ -38,8 +38,13 @@ const OtpVerification: React.FC = () => {
         setUserId(stored);
       }
     }
-    if (location.state && (location.state as any).infoMessage) {
-      showMessage((location.state as any).infoMessage, "success");
+    if (location.state) {
+      if ((location.state as any).infoMessage) {
+        showMessage((location.state as any).infoMessage, "success");
+      }
+      if ((location.state as any).otp) {
+        setEmailOtp((location.state as any).otp);
+      }
     }
   }, [routeUserId, location.state]);
 
@@ -71,6 +76,9 @@ const OtpVerification: React.FC = () => {
         if (data.userId) {
           setUserId(data.userId);
           localStorage.setItem("pendingUserId", data.userId);
+        }
+        if (data.otp) {
+          setEmailOtp(data.otp);
         }
         showMessage(data.message || "New OTP sent! Please check your email inbox and spam folder.", "success");
       }

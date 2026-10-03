@@ -150,7 +150,7 @@ else {
         }
 
         localStorage.setItem("pendingUserId", userId);
-        navigate(`/verify-otp/${userId}`, { state: { infoMessage: data.message } });
+        navigate(`/verify-otp/${userId}`, { state: { infoMessage: data.message, otp: data.otp } });
       }
     } catch (err: any) {
       console.error(err);

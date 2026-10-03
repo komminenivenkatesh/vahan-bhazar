@@ -83,21 +83,22 @@ router.post("/register", async (req, res) => {
 
     await user.save();
 
-    let emailStatusMessage = "OTP sent to your email.";
+    let emailStatusMessage = "OTP sent to your email address.";
     try {
       await Promise.race([
         sendOtpEmail(email, emailOtp),
-        new Promise((_, reject) => setTimeout(() => reject(new Error("Email server timed out")), 15000))
+        new Promise((_, reject) => setTimeout(() => reject(new Error("Email server timed out")), 4000))
       ]);
       console.log(`📧 OTP email sent to ${email}`);
     } catch (e) {
-      console.error("Warning: failed to send OTP email:", e.message);
-      emailStatusMessage = `Account created, but email error: ${e.message}. Click 'Resend OTP' or check spam.`;
+      console.error("Warning: email sending failed:", e.message);
+      emailStatusMessage = `Notice: Render Free blocks SMTP (${e.message}). Verification OTP: ${emailOtp}`;
     }
 
     return res.status(201).json({
       message: emailStatusMessage,
       userId: user._id,
+      otp: emailOtp,
     });
   } catch (error) {
     console.error("Register error:", error);
@@ -139,19 +140,22 @@ router.post("/resend-otp", async (req, res) => {
     try {
       await Promise.race([
         sendOtpEmail(user.email, newOtp),
-        new Promise((_, reject) => setTimeout(() => reject(new Error("Email server timed out")), 15000))
+        new Promise((_, reject) => setTimeout(() => reject(new Error("Email server timed out")), 4000))
       ]);
       console.log(`📧 Resent OTP to ${user.email}`);
       return res.json({
         message: `New OTP sent to ${user.email}! Please check inbox and spam folder.`,
         userId: user._id,
-        email: user.email
+        email: user.email,
+        otp: newOtp
       });
     } catch (mailErr) {
-      console.error("Failed to resend email:", mailErr);
-      return res.status(500).json({
-        message: `Failed to send email (${mailErr.message}). Check spam or verify email configuration.`,
-        userId: user._id
+      console.error("Failed to resend email:", mailErr.message);
+      return res.json({
+        message: `Notice: Render Free blocks SMTP (${mailErr.message}). Your verification OTP is: ${newOtp}`,
+        userId: user._id,
+        email: user.email,
+        otp: newOtp
       });
     }
   } catch (err) {
