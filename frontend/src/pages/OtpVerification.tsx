@@ -12,11 +12,9 @@ const OtpVerification: React.FC = () => {
 
   const [userId, setUserId] = useState<string | null>(null);
   const [emailOtp, setEmailOtp] = useState("");
-  const [phoneOtp, setPhoneOtp] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [messageType, setMessageType] = useState<"success" | "error" | null>(null);
   const [loadingEmail, setLoadingEmail] = useState(false);
-  const [loadingPhone, setLoadingPhone] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -72,49 +70,16 @@ const OtpVerification: React.FC = () => {
         return;
       }
 
-      showMessage("Email verified successfully ✅", "success");
+      showMessage("Email verified successfully! ✅ Redirecting to login...", "success");
+      setTimeout(() => {
+        localStorage.removeItem("pendingUserId");
+        navigate("/login");
+      }, 1500);
     } catch (err) {
       console.error(err);
       showMessage("Network error while verifying email.", "error");
     } finally {
       setLoadingEmail(false);
-    }
-  };
-
-  const handleVerifyPhone = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!userId) {
-      showMessage("User not found. Please register again.", "error");
-      return;
-    }
-    if (!phoneOtp) {
-      showMessage("Please enter phone OTP.", "error");
-      return;
-    }
-
-    try {
-      setLoadingPhone(true);
-      setMessage(null);
-
-      const res = await fetch(`${BACKEND_BASE}/api/auth/verify-phone`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, otp: phoneOtp }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        showMessage(data.message || "Failed to verify phone.", "error");
-        return;
-      }
-
-      showMessage("Phone number verified successfully ✅", "success");
-    } catch (err) {
-      console.error(err);
-      showMessage("Network error while verifying phone.", "error");
-    } finally {
-      setLoadingPhone(false);
     }
   };
 
@@ -201,7 +166,7 @@ const OtpVerification: React.FC = () => {
               marginBottom: '30px',
               fontSize: '0.95rem'
             }}>
-              Enter the OTPs sent to your email and phone number.
+              Enter the 6-digit OTP sent to your email address.
             </p>
 
             {message && (
@@ -230,7 +195,7 @@ const OtpVerification: React.FC = () => {
             )}
 
             {/* Email OTP */}
-            <form onSubmit={handleVerifyEmail} style={{ marginBottom: '24px' }}>
+            <form onSubmit={handleVerifyEmail} style={{ marginBottom: '30px' }}>
               <div style={{ marginBottom: '16px' }}>
                 <label style={{ display: 'block', color: '#d4af37', marginBottom: '8px', fontSize: '0.9rem' }}>
                   Email OTP
@@ -267,49 +232,6 @@ const OtpVerification: React.FC = () => {
                     }}
                   >
                     {loadingEmail ? "..." : "Verify"}
-                  </button>
-                </div>
-              </div>
-            </form>
-
-            {/* Phone OTP */}
-            <form onSubmit={handleVerifyPhone} style={{ marginBottom: '30px' }}>
-              <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', color: '#d4af37', marginBottom: '8px', fontSize: '0.9rem' }}>
-                  Phone OTP
-                </label>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <input
-                    type="text"
-                    value={phoneOtp}
-                    placeholder="Enter phone OTP"
-                    onChange={(e) => setPhoneOtp(e.target.value)}
-                    style={{
-                      flex: 1,
-                      background: 'rgba(0, 0, 0, 0.3)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      borderRadius: '12px',
-                      padding: '12px 16px',
-                      color: '#fff',
-                      outline: 'none',
-                      fontSize: '1rem'
-                    }}
-                  />
-                  <button
-                    type="submit"
-                    disabled={loadingPhone || !userId}
-                    style={{
-                      background: 'linear-gradient(135deg, #d4af37, #b8860b)',
-                      border: 'none',
-                      borderRadius: '12px',
-                      padding: '0 20px',
-                      color: '#000',
-                      fontWeight: 600,
-                      cursor: loadingPhone || !userId ? 'not-allowed' : 'pointer',
-                      opacity: loadingPhone || !userId ? 0.7 : 1
-                    }}
-                  >
-                    {loadingPhone ? "..." : "Verify"}
                   </button>
                 </div>
               </div>

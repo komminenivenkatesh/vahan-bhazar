@@ -5,7 +5,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { generateOtp } = require("../utils/otp");
-const { sendOtpSms } = require("../utils/sendSms");
 const crypto = require("crypto");
 const {
   sendOtpEmail,
@@ -69,7 +68,6 @@ router.post("/register", async (req, res) => {
     const passwordHash = await bcrypt.hash(password, 10);
 
     const emailOtp = generateOtp(6);
-    const phoneOtp = generateOtp(6);
     const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
     const user = new User({
@@ -78,29 +76,20 @@ router.post("/register", async (req, res) => {
       phone,
       passwordHash,
       isEmailVerified: false,
-      isPhoneVerified: false,
+      isPhoneVerified: true, // phone verification bypassed
       emailOtp,
       emailOtpExpiresAt: otpExpiry,
-      phoneOtp,
-      phoneOtpExpiresAt: otpExpiry,
     });
 
     await user.save();
 
-    try {
-      await sendOtpEmail(email, emailOtp);
-    } catch (e) {
-      console.error("Warning: failed to send OTP email", e);
-    }
-
-    try {
-      await sendOtpSms(phone, phoneOtp);
-    } catch (e) {
-      console.error("Warning: failed to send OTP SMS", e);
-    }
+    // Send email OTP (non-blocking so API responds fast)
+    sendOtpEmail(email, emailOtp)
+      .then(() => console.log(`📧 OTP email sent to ${email}`))
+      .catch((e) => console.error("Warning: failed to send OTP email", e.message));
 
     return res.status(201).json({
-      message: "User registered. OTPs sent to email and phone.",
+      message: "User registered. OTP sent to your email.",
       userId: user._id,
     });
   } catch (error) {
