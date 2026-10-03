@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
-const BACKEND_BASE = import.meta.env.VITE_API_URL || "https://vahan-bhazar-backend.onrender.com";
+const BACKEND_BASE = "https://vahan-bhazar-backend.onrender.com";
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState("");

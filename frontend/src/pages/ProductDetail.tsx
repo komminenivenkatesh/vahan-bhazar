@@ -21,7 +21,7 @@ type Vehicle = {
   owner?: string;
 };
 
-const BACKEND_BASE = import.meta.env.VITE_API_URL || "https://vahan-bhazar-backend.onrender.com";
+const BACKEND_BASE = "https://vahan-bhazar-backend.onrender.com";
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams();

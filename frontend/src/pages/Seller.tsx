@@ -15,7 +15,7 @@ type VehicleCreateResponse = {
   createdAt?: string;
 };
 
-const BACKEND_BASE = import.meta.env.VITE_API_URL || "https://vahan-bhazar-backend.onrender.com";
+const BACKEND_BASE = "https://vahan-bhazar-backend.onrender.com";
 
 const Seller: React.FC = () => {
   const navigate = useNavigate();

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Navbar from "../components/Navbar";
 
-const BACKEND_BASE = import.meta.env.VITE_API_URL || "https://vahan-bhazar-backend.onrender.com";
+const BACKEND_BASE = "https://vahan-bhazar-backend.onrender.com";
 
 const OtpVerification: React.FC = () => {
   const { userId: routeUserId } = useParams<{ userId: string }>();

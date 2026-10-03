@@ -53,7 +53,7 @@ const Login: React.FC = () => {
     try {
       setLoading(true);
 
-      const BACKEND_BASE = import.meta.env.VITE_API_URL || "https://vahan-bhazar-backend.onrender.com";
+      const BACKEND_BASE = "https://vahan-bhazar-backend.onrender.com";
       const endpoint = isLogin
         ? `${BACKEND_BASE}/api/auth/login`
         : `${BACKEND_BASE}/api/auth/register`;

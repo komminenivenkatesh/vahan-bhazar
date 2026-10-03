@@ -12,7 +12,7 @@ export type Vehicle = {
   images?: string[];
 };
 
-export const API_BASE = import.meta.env.VITE_API_URL || 'https://vahan-bhazar-backend.onrender.com';
+export const API_BASE = 'https://vahan-bhazar-backend.onrender.com';
 
 export async function fetchVehicles(): Promise<{ total: number; vehicles: Vehicle[] }> {
   const base = API_BASE;

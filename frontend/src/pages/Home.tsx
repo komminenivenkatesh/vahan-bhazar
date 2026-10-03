@@ -18,7 +18,7 @@ type Vehicle = {
   odometer_km?: number;
 };
 
-const BACKEND_BASE = import.meta.env.VITE_API_URL || "https://vahan-bhazar-backend.onrender.com";
+const BACKEND_BASE = "https://vahan-bhazar-backend.onrender.com";
 
 const heroStats = [
   { label: "Verified listings", value: "1.2k+", icon: "✓" },
