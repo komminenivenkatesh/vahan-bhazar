@@ -1,1 +1,24 @@
-node_modules
+# Dependencies
+node_modules/
+
+# Environment variables (NEVER commit secrets!)
+.env
+.env.local
+.env.production
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build output
+dist/
+build/
+
+# Uploads (user-generated content)
+uploads/
+
+# Temp files
+.tmp.driveupload/
