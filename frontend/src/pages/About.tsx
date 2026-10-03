@@ -209,68 +209,6 @@ const About: React.FC = () => {
               Our cutting-edge technology, combined with a user-first approach, ensures every transaction is smooth, reliable, and rewarding.
             </p>
           </motion.div>
-
-          {/* Meet the Team */}
-          <motion.div
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            style={{
-              maxWidth: '1200px',
-              margin: '100px auto 0',
-              textAlign: 'center'
-            }}
-          >
-            <h2 style={{
-              fontSize: 'clamp(2rem, 4vw, 3rem)',
-              fontWeight: 900,
-              marginBottom: '60px',
-              background: 'linear-gradient(135deg, #d4af37 0%, #e5e5e5 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
-            }}>
-              Meet The Team
-            </h2>
-            
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: '40px',
-              padding: '0 20px'
-            }}>
-                {[
-                { name: "k.venkateswarlu", role: "Technical Lead & Team Leader", img: "/uploads/venky.jpeg" },
-                { name: "Akash", role: "Decumentation Specialist", img: "/uploads/akash.jpeg" },
-                { name: "Mahesh", role: "Database & Research", img: "/uploads/mahesh.jpeg" }
-              ].map((member, idx) => (
-                <motion.div
-                  key={idx}
-                  whileHover={{ y: -10 }}
-                  style={{
-                    background: 'rgba(26, 26, 26, 0.8)',
-                    borderRadius: '24px',
-                    overflow: 'hidden',
-                    border: '1px solid rgba(212, 175, 55, 0.15)',
-                    boxShadow: '0 20px 40px rgba(0,0,0,0.4)'
-                  }}
-                >
-                  <div style={{ height: '300px', overflow: 'hidden' }}>
-                    <img 
-                      src={member.img} 
-                      alt={member.name}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'grayscale(20%)' }}
-                    />
-                  </div>
-                  <div style={{ padding: '24px' }}>
-                    <h3 style={{ color: '#e5e5e5', fontSize: '1.5rem', marginBottom: '8px' }}>{member.name}</h3>
-                    <p style={{ color: '#d4af37', fontWeight: 600, letterSpacing: '0.05em' }}>{member.role}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
         </motion.section>
       </div>
     </>
