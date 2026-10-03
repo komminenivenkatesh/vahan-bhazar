@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Navbar from "../components/Navbar";
 
@@ -8,6 +8,7 @@ const BACKEND_BASE = "https://vahan-bhazar-backend.onrender.com";
 const OtpVerification: React.FC = () => {
   const { userId: routeUserId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [userId, setUserId] = useState<string | null>(null);
@@ -15,6 +16,7 @@ const OtpVerification: React.FC = () => {
   const [message, setMessage] = useState<string | null>(null);
   const [messageType, setMessageType] = useState<"success" | "error" | null>(null);
   const [loadingEmail, setLoadingEmail] = useState(false);
+  const [resending, setResending] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -35,11 +37,42 @@ const OtpVerification: React.FC = () => {
         setUserId(stored);
       }
     }
-  }, [routeUserId]);
+    if (location.state && (location.state as any).infoMessage) {
+      showMessage((location.state as any).infoMessage, "success");
+    }
+  }, [routeUserId, location.state]);
 
   const showMessage = (text: string, type: "success" | "error") => {
     setMessage(text);
     setMessageType(type);
+  };
+
+  const handleResendOtp = async () => {
+    if (!userId) {
+      showMessage("User ID not found. Please register again.", "error");
+      return;
+    }
+    try {
+      setResending(true);
+      setMessage(null);
+
+      const res = await fetch(`${BACKEND_BASE}/api/auth/resend-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        showMessage(data.message || "Failed to resend OTP.", "error");
+      } else {
+        showMessage(data.message || "New OTP sent! Please check your email inbox and spam folder.", "success");
+      }
+    } catch (err: any) {
+      showMessage(err?.message ? `Network error: ${err.message}` : "Failed to resend OTP.", "error");
+    } finally {
+      setResending(false);
+    }
   };
 
   const handleVerifyEmail = async (e: React.FormEvent) => {
@@ -232,6 +265,28 @@ const OtpVerification: React.FC = () => {
                     }}
                   >
                     {loadingEmail ? "..." : "Verify"}
+                  </button>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '14px' }}>
+                  <span style={{ color: '#888', fontSize: '0.85rem' }}>
+                    Didn't get the email? Check Spam or
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleResendOtp}
+                    disabled={resending || !userId}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#d4af37',
+                      textDecoration: 'underline',
+                      cursor: resending || !userId ? 'not-allowed' : 'pointer',
+                      fontSize: '0.85rem',
+                      fontWeight: 600,
+                      padding: 0
+                    }}
+                  >
+                    {resending ? "Sending..." : "Resend OTP"}
                   </button>
                 </div>
               </div>

@@ -83,18 +83,69 @@ router.post("/register", async (req, res) => {
 
     await user.save();
 
-    // Send email OTP (non-blocking so API responds fast)
-    sendOtpEmail(email, emailOtp)
-      .then(() => console.log(`📧 OTP email sent to ${email}`))
-      .catch((e) => console.error("Warning: failed to send OTP email", e.message));
+    let emailStatusMessage = "OTP sent to your email.";
+    try {
+      await Promise.race([
+        sendOtpEmail(email, emailOtp),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("Email server timed out")), 5000))
+      ]);
+      console.log(`📧 OTP email sent to ${email}`);
+    } catch (e) {
+      console.error("Warning: failed to send OTP email:", e.message);
+      emailStatusMessage = `Account created, but email error: ${e.message}. Click 'Resend OTP' or check spam.`;
+    }
 
     return res.status(201).json({
-      message: "User registered. OTP sent to your email.",
+      message: emailStatusMessage,
       userId: user._id,
     });
   } catch (error) {
     console.error("Register error:", error);
     return res.status(500).json({ message: "Server error." });
+  }
+});
+
+/**
+ * POST /api/auth/resend-otp
+ * Body: { userId }
+ */
+router.post("/resend-otp", async (req, res) => {
+  try {
+    const { userId } = req.body;
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required." });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    if (user.isEmailVerified) {
+      return res.status(400).json({ message: "Email is already verified. You can log in." });
+    }
+
+    const newOtp = generateOtp(6);
+    user.emailOtp = newOtp;
+    user.emailOtpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+    await user.save();
+
+    try {
+      await Promise.race([
+        sendOtpEmail(user.email, newOtp),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("Email server timed out")), 6000))
+      ]);
+      console.log(`📧 Resent OTP to ${user.email}`);
+      return res.json({ message: `New OTP sent to ${user.email}! Please check inbox and spam folder.` });
+    } catch (mailErr) {
+      console.error("Failed to resend email:", mailErr);
+      return res.status(500).json({
+        message: `Failed to send email (${mailErr.message}). Check spam or verify email configuration.`
+      });
+    }
+  } catch (err) {
+    console.error("Resend OTP error:", err);
+    return res.status(500).json({ message: "Server error while resending OTP." });
   }
 });
 
