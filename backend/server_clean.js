@@ -36,14 +36,13 @@ else app.use((req, res, next) => {
   next();
 });
 
-// Connect to MongoDB (pass MONGO_URI via env or fallback)
-connectDB(process.env.MONGO_URI || "mongodb+srv://komminenivenkatesh045_db_user:%40Venky210606@vahan-bazar-db.ethum2q.mongodb.net/");
+// Connect to MongoDB
+connectDB(process.env.MONGO_URI);
 
 // Serve uploaded images as static files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Mount API routes (use only the merged vehicles route)
-app.use("/api/vehicles", vehicleRoutes);
+// Mount API routes
 if (authRoutes) app.use("/api/auth", authRoutes);
 
 // Simple root route
