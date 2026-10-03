@@ -8,6 +8,13 @@
 
 html, body {
   height: 100%;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+#root {
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
@@ -15,6 +22,7 @@ body {
   color: var(--muted);
   line-height: 1.7;
   letter-spacing: 0.01em;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Custom cursor styles */

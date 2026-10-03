@@ -218,7 +218,7 @@ const Seller: React.FC = () => {
             style={{
               maxWidth: '800px',
               margin: '0 auto 60px',
-              padding: '48px',
+              padding: 'clamp(20px, 5vw, 48px)',
               background: 'rgba(30, 41, 59, 0.6)',
               border: '1px solid rgba(20, 184, 166, 0.2)',
               borderRadius: '24px',
@@ -285,7 +285,7 @@ const Seller: React.FC = () => {
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
                 <div>
                   <label style={{ 
                     display: 'block', 

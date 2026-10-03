@@ -236,8 +236,8 @@ const Dashboard: React.FC = () => {
             variants={containerVariants}
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-              gap: 'clamp(2rem, 5vw, 4rem)',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
+              gap: 'clamp(1.5rem, 4vw, 4rem)',
               marginBottom: '5rem',
               maxWidth: 1400,
               margin: '0 auto'
@@ -253,7 +253,7 @@ const Dashboard: React.FC = () => {
                 backdropFilter: 'blur(30px)',
                 border: '1px solid rgba(212, 175, 55, 0.3)',
                 borderRadius: 32,
-                padding: 'clamp(2.5rem, 5vw, 4rem)',
+                padding: 'clamp(1.5rem, 4vw, 4rem)',
                 cursor: 'pointer',
                 position: 'relative',
                 overflow: 'hidden',
@@ -359,7 +359,7 @@ const Dashboard: React.FC = () => {
                 backdropFilter: 'blur(30px)',
                 border: '1px solid rgba(192, 192, 192, 0.3)',
                 borderRadius: 32,
-                padding: 'clamp(2.5rem, 5vw, 4rem)',
+                padding: 'clamp(1.5rem, 4vw, 4rem)',
                 cursor: 'pointer',
                 position: 'relative',
                 overflow: 'hidden',

@@ -190,7 +190,7 @@ const OtpVerification: React.FC = () => {
               backdropFilter: 'blur(20px)',
               border: '1px solid rgba(212, 175, 55, 0.2)',
               borderRadius: '24px',
-              padding: '40px',
+              padding: 'clamp(20px, 5vw, 40px)',
               boxShadow: '0 20px 40px rgba(0,0,0,0.4)'
             }}
           >

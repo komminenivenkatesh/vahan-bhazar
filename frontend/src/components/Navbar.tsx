@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 
 type User = {
   id: string;
@@ -14,6 +14,7 @@ export default function Navbar() {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { scrollY } = useScroll();
   const navOpacity = useTransform(scrollY, [0, 100], [0.95, 1]);
 
@@ -24,6 +25,10 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
 
   let user: User | null = null;
   const storedUser = localStorage.getItem("user");
@@ -123,8 +128,9 @@ export default function Navbar() {
           />
         </Link>
 
-        {/* Navigation Links */}
+        {/* Navigation Links (Desktop) */}
         <div
+          className="nav-desktop-links"
           style={{
             display: "flex",
             gap: "clamp(0.5rem, 2vw, 2rem)",
@@ -178,9 +184,9 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* Search Bar */}
-        <div style={{ flex: 1, maxWidth: 400, margin: "0 20px" }}>
-          <form onSubmit={handleSearch} style={{ position: "relative" }}>
+        {/* Search Bar (Desktop) */}
+        <div className="nav-desktop-search" style={{ flex: 1, maxWidth: 400, margin: "0 20px" }}>
+          <form onSubmit={handleSearch} style={{ position: "relative", width: "100%" }}>
             <input
               type="text"
               value={searchQuery}
@@ -232,8 +238,8 @@ export default function Navbar() {
           </form>
         </div>
 
-        {/* User Actions */}
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        {/* User Actions & Mobile Hamburger */}
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           {!isLoggedIn ? (
             <motion.div
               whileHover={{ scale: 1.05 }}
@@ -242,16 +248,17 @@ export default function Navbar() {
               <Link
                 to="/login"
                 style={{
-                  padding: "10px 24px",
+                  padding: "8px 20px",
                   borderRadius: 999,
                   background: "linear-gradient(135deg, #d4af37, #c9a22e)",
                   color: "#000",
-                  fontSize: "0.95rem",
+                  fontSize: "0.9rem",
                   fontWeight: 700,
                   textDecoration: "none",
                   boxShadow: "0 8px 20px rgba(212, 175, 55, 0.4)",
                   border: "none",
                   display: "inline-block",
+                  whiteSpace: "nowrap"
                 }}
               >
                 Login
@@ -262,18 +269,19 @@ export default function Navbar() {
               <Link
                 to="/profile"
                 style={{
-                  padding: "8px 16px",
+                  padding: "8px 14px",
                   borderRadius: 999,
                   background: "rgba(212, 175, 55, 0.1)",
                   border: "1px solid rgba(212, 175, 55, 0.3)",
                   color: "#d4af37",
-                  fontSize: "0.9rem",
+                  fontSize: "0.85rem",
                   fontWeight: 600,
                   display: "flex",
                   alignItems: "center",
-                  gap: 8,
+                  gap: 6,
                   textDecoration: "none",
-                  cursor: "pointer"
+                  cursor: "pointer",
+                  whiteSpace: "nowrap"
                 }}
               >
                 <span>👤</span>
@@ -284,28 +292,160 @@ export default function Navbar() {
                 whileTap={{ scale: 0.98 }}
                 onClick={handleLogout}
                 style={{
-                  padding: "10px 20px",
+                  padding: "8px 14px",
                   borderRadius: 999,
                   background: "rgba(239, 68, 68, 0.1)",
                   border: "1px solid rgba(239, 68, 68, 0.3)",
                   color: "#ef4444",
-                  fontSize: "0.9rem",
+                  fontSize: "0.85rem",
                   fontWeight: 700,
                   cursor: "pointer",
                   transition: "all 0.3s ease",
+                  whiteSpace: "nowrap"
                 }}
               >
                 Logout
               </motion.button>
             </>
           )}
+
+          {/* Mobile Toggle Button */}
+          <button
+            type="button"
+            className="nav-mobile-btn"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle Navigation Menu"
+            style={{
+              background: "rgba(212, 175, 55, 0.1)",
+              border: "1px solid rgba(212, 175, 55, 0.3)",
+              borderRadius: "10px",
+              padding: "6px 12px",
+              color: "#d4af37",
+              fontSize: "1.25rem",
+              fontWeight: 700,
+              cursor: "pointer",
+              alignItems: "center",
+              justifyContent: "center",
+              lineHeight: 1
+            }}
+          >
+            {mobileMenuOpen ? "✕" : "☰"}
+          </button>
         </div>
       </nav>
+
+      {/* Mobile Drawer Menu */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25 }}
+            style={{
+              background: "rgba(10, 10, 10, 0.98)",
+              backdropFilter: "blur(24px)",
+              WebkitBackdropFilter: "blur(24px)",
+              borderBottom: "1px solid rgba(212, 175, 55, 0.25)",
+              padding: "16px 20px 24px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "14px",
+              overflow: "hidden"
+            }}
+          >
+            {/* Mobile Search */}
+            <form onSubmit={handleSearch} style={{ position: "relative", width: "100%" }}>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search bikes..."
+                style={{
+                  width: "100%",
+                  padding: "10px 40px 10px 16px",
+                  borderRadius: 999,
+                  background: "rgba(20, 20, 20, 0.8)",
+                  border: "1px solid rgba(212, 175, 55, 0.3)",
+                  color: "#e5e5e5",
+                  fontSize: "0.95rem",
+                  outline: "none",
+                }}
+              />
+              <button
+                type="submit"
+                style={{
+                  position: "absolute",
+                  right: 8,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "transparent",
+                  border: "none",
+                  color: "#d4af37",
+                  cursor: "pointer",
+                  padding: 6,
+                }}
+              >
+                <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.35-4.35" />
+                </svg>
+              </button>
+            </form>
+
+            {/* Mobile Links */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+              {navItems.map((item) => {
+                const isActive = location.pathname === item.path;
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => setMobileMenuOpen(false)}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      padding: "12px 16px",
+                      borderRadius: "14px",
+                      color: isActive ? "#000" : "#e5e5e5",
+                      fontSize: "0.95rem",
+                      fontWeight: 600,
+                      textDecoration: "none",
+                      background: isActive
+                        ? "linear-gradient(135deg, #d4af37, #c9a22e)"
+                        : "rgba(255, 255, 255, 0.05)",
+                      border: "1px solid rgba(212, 175, 55, 0.15)",
+                    }}
+                  >
+                    <span>{item.icon}</span>
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <style>{`
         @keyframes shimmer {
           0%, 100% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
+        }
+        .nav-desktop-links, .nav-desktop-search {
+          display: flex;
+        }
+        .nav-mobile-btn {
+          display: none;
+        }
+        @media (max-width: 900px) {
+          .nav-desktop-links, .nav-desktop-search {
+            display: none !important;
+          }
+          .nav-mobile-btn {
+            display: flex !important;
+          }
         }
       `}</style>
     </motion.header>

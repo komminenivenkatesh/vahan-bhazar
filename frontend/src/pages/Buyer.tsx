@@ -396,9 +396,9 @@ const Buyer: React.FC = () => {
             ) : (
               <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-                gap: '28px',
-                padding: '0 clamp(1rem, 3vw, 2rem)'
+                gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
+                gap: '24px',
+                padding: '0 clamp(0.75rem, 3vw, 2rem)'
               }}>
                 {filteredVehicles.map((b, index) => {
                   const imgSrc = resolveImageSrc(b);
