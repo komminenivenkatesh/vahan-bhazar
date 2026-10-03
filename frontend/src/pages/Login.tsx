@@ -141,9 +141,9 @@ else {
         localStorage.setItem("pendingUserId", userId);
         navigate(`/verify-otp/${userId}`);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      setMessage("Network error. Please try again.");
+      setMessage(err?.message ? `Error: ${err.message}` : "Network error. Please try again.");
       setMessageType("error");
     } finally {
       setLoading(false);
